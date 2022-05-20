@@ -1,43 +1,17 @@
-From 96d1dc2b2f0ec4fff528ea58306ea1509c6b4a26 Mon Sep 17 00:00:00 2001
-From: Chung <pcwong@sportsoho.com>
-Date: Mon, 28 Jun 2021 12:42:04 +0800
-Subject: [PATCH] Rename the path and filename to avoid AdBlock
-
----
- src/Form/ReviveAdserverSettingsForm.php                       | 3 ++-
- src/Plugin/Block/ReviveAdserverZoneBlock.php                  | 4 ++--
- .../ReviveAdserver/InvocationMethod/AsyncJavascript.php       | 2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
-
 diff --git a/src/Form/ReviveAdserverSettingsForm.php b/src/Form/ReviveAdserverSettingsForm.php
 index 5ed159c..6ed1965 100644
 --- a/src/Form/ReviveAdserverSettingsForm.php
 +++ b/src/Form/ReviveAdserverSettingsForm.php
 @@ -158,7 +158,8 @@ class ReviveAdserverSettingsForm extends ConfigFormBase {
      $url_components = parse_url($url);
- 
+
      // Build the xmlrpc path, based on the delivery url.
 -    $xmlrpc_basepath = substr($url_components['path'], 0, strpos($url_components['path'], '/delivery', 0)) . '/api/v2/xmlrpc/';
 +    #$xmlrpc_basepath = substr($url_components['path'], 0, strpos($url_components['path'], '/delivery', 0)) . '/api/v2/xmlrpc/';
 +    $xmlrpc_basepath = substr($url_components['path'], 0, strpos($url_components['path'], '/d', 0)) . '/api/v2/xmlrpc/';
- 
+
      // Don't allow to sync the zones without credentials.
      if (empty($username) || empty($password)) {
-diff --git a/src/Plugin/Block/ReviveAdserverZoneBlock.php b/src/Plugin/Block/ReviveAdserverZoneBlock.php
-index 7676c41..9c6f239 100644
---- a/src/Plugin/Block/ReviveAdserverZoneBlock.php
-+++ b/src/Plugin/Block/ReviveAdserverZoneBlock.php
-@@ -68,8 +68,8 @@ class ReviveAdserverZoneBlock extends BlockBase implements ContainerFactoryPlugi
-     $invocationMethod = $this->invocationMethodManager->loadInvocationMethodFromInput($method);
-     if ($invocationMethod) {
-       $invocationMethod->setZoneId($config['zone_id']);
--      $invocationMethod->setBlockBanner($config['block_banner']);
--      $invocationMethod->setBlockBannerCampaign($config['block_banner_campaign']);
-+      $invocationMethod->setBlockBanner($config['block_banner'] ?? FALSE);
-+      $invocationMethod->setBlockBannerCampaign($config['block_banner_campaign'] ?? FALSE);
-       $invocationMethod->prepare();
-       $build = $invocationMethod->render();
-     }
 diff --git a/src/Plugin/ReviveAdserver/InvocationMethod/AsyncJavascript.php b/src/Plugin/ReviveAdserver/InvocationMethod/AsyncJavascript.php
 index b3bf5b5..4d98665 100644
 --- a/src/Plugin/ReviveAdserver/InvocationMethod/AsyncJavascript.php
@@ -51,6 +25,3 @@ index b3bf5b5..4d98665 100644
          'async' => 'async',
        ],
      ];
--- 
-2.25.1
-
